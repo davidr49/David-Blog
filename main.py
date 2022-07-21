@@ -21,7 +21,7 @@ ckeditor = CKEditor(app)
 Bootstrap(app)
 
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///blog.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -158,6 +158,7 @@ def show_post(post_id):
             comment = Comment(text=text, author_id=current_user.id, parent_post=requested_post)
             db.session.add(comment)
             db.session.commit()
+            return redirect(url_for('show_post'))
         else:
             flash('Please log in or register to comment.')
             return redirect(url_for('login'))
